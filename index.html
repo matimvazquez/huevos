@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Huevo por huevo</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="¿Cuántos huevos comés? Mirá qué hay detrás y cómo reemplazarlos de a poco, con opciones más baratas y nutritivas.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Nunito+Sans:opsz,wght@6..12,400..800&display=swap">
+<style>
+/* Layout: una sola columna amable, pasos numerados (es un recorrido real: contar, mirar, cambiar). Acento yema, verde de cambio. */
+:root{
+  --bg:#F3F6F4; --card:#FFFFFF; --ink:#1E2A26; --soft:#5E6D67; --line:#D6DFDA;
+  --yolk:#F2B21B; --yolk-soft:#FDF1CF; --leaf:#2E8A5C; --leaf-soft:#DDF1E5; --rose:#C9634C;
+  --f-display:"Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
+  --f-body:"Nunito Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#121815; --card:#1A221E; --ink:#E8EFEB; --soft:#9FB0A8; --line:#2C3832;
+  --yolk:#F7C548; --yolk-soft:#3A3115; --leaf:#62C894; --leaf-soft:#173024; --rose:#EE8E78; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121815; --card:#1A221E; --ink:#E8EFEB; --soft:#9FB0A8; --line:#2C3832;
+  --yolk:#F7C548; --yolk-soft:#3A3115; --leaf:#62C894; --leaf-soft:#173024; --rose:#EE8E78; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg); color:var(--ink); font-family:var(--f-body); font-size:17px; line-height:1.6; font-variant-numeric:tabular-nums}
+.wrap{max-width:820px; margin:0 auto; padding-left:max(16px,env(safe-area-inset-left,0px)); padding-right:max(16px,env(safe-area-inset-right,0px)); padding-block:28px 72px}
+a{color:inherit}
+button{font:inherit; color:inherit}
+:focus-visible{outline:3px solid var(--yolk); outline-offset:2px; border-radius:6px}
+h1,h2,h3{font-family:var(--f-display); line-height:1.05; text-wrap:balance}
+
+header{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:20px; align-items:center}
+.egg{width:96px; height:120px; border-radius:50% 50% 50% 50% / 60% 60% 40% 40%; background:var(--card); border:2px solid var(--line); position:relative; flex:none}
+.egg::after{content:""; position:absolute; width:44px; height:44px; border-radius:50%; background:var(--yolk); left:24px; top:46px}
+.eyebrow{font-weight:800; font-size:.8rem; letter-spacing:.12em; text-transform:uppercase; color:var(--leaf)}
+h1{font-size:clamp(2.6rem,9vw,4.6rem); font-weight:800; margin:.1em 0 .15em; letter-spacing:-.02em}
+.lede{font-size:1.12rem; color:var(--soft); margin:0; max-width:52ch}
+
+.step{margin-top:44px}
+.step-n{display:inline-grid; place-items:center; width:30px; height:30px; border-radius:50%; background:var(--ink); color:var(--bg); font-weight:800; font-size:.9rem; margin-right:10px; vertical-align:2px}
+h2{font-size:clamp(1.6rem,4.5vw,2.2rem); font-weight:800; margin:0 0 6px}
+.sub{color:var(--soft); margin:0 0 16px; max-width:60ch}
+
+.card{background:var(--card); border:1px solid var(--line); border-radius:18px; padding:20px}
+.input-row{display:flex; align-items:center; gap:14px; flex-wrap:wrap}
+.big-num{font-family:var(--f-display); font-weight:800; font-size:clamp(3.4rem,12vw,5rem); line-height:.9; min-width:2ch}
+.big-num small{display:block; font-family:var(--f-body); font-size:.95rem; font-weight:700; color:var(--soft); margin-top:6px}
+.stepper{display:flex; gap:8px; margin-left:auto}
+.stepper button{width:48px; height:48px; border-radius:50%; border:2px solid var(--line); background:var(--card); font-size:1.5rem; font-weight:700; cursor:pointer}
+.stepper button:hover{border-color:var(--ink)}
+input[type=range]{width:100%; margin:16px 0 4px; accent-color:var(--yolk); height:30px}
+.hint{font-size:.9rem; color:var(--soft); margin:6px 0 0}
+.quick{display:flex; flex-wrap:wrap; gap:8px; margin-top:12px}
+.pill{border:1.5px solid var(--line); background:var(--card); border-radius:999px; padding:6px 12px; font-size:.88rem; cursor:pointer}
+.pill:hover{border-color:var(--yolk)}
+.hidden-eggs{margin-top:14px; font-size:.9rem; background:var(--yolk-soft); border-radius:12px; padding:10px 12px}
+
+/* Resultados */
+.grid{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px}
+@media (max-width:560px){.grid{grid-template-columns:minmax(0,1fr)}}
+.stat{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:16px}
+.stat .v{font-family:var(--f-display); font-weight:800; font-size:2.2rem; line-height:1}
+.stat .l{font-weight:700; margin-top:4px}
+.stat p{margin:6px 0 0; font-size:.88rem; color:var(--soft)}
+.hens{display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; min-height:20px}
+.hen{width:18px; height:18px; border-radius:50% 50% 45% 45%; background:var(--yolk); position:relative}
+.hen.part{background:linear-gradient(90deg,var(--yolk) var(--p),var(--line) var(--p))}
+
+.a4wrap{display:grid; grid-template-columns:auto minmax(0,1fr); gap:18px; align-items:center; margin-top:12px}
+.a4{width:84px; aspect-ratio:210/297; border:2px dashed var(--soft); border-radius:3px; display:grid; place-items:center; font-weight:800; font-size:.8rem; color:var(--soft); max-width:100%}
+.life{margin-top:12px; display:grid; gap:10px}
+.life div{display:grid; grid-template-columns:2.2rem minmax(0,1fr); gap:10px; align-items:start}
+.life b{font-family:var(--f-display); font-size:1.3rem; color:var(--yolk); line-height:1.2}
+.soft-note{font-size:.92rem; color:var(--soft); border-left:3px solid var(--leaf); padding-left:12px; margin:16px 0 0}
+
+.health{display:grid; gap:10px}
+.health div{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px 16px}
+.health h3{font-size:1.1rem; margin:0 0 4px}
+.health p{margin:0; font-size:.93rem; color:var(--soft)}
+
+/* Reemplazo */
+.swap-card{background:var(--leaf-soft); border-radius:18px; padding:20px}
+.swap-head{display:flex; justify-content:space-between; gap:10px; align-items:baseline; flex-wrap:wrap}
+.swap-head b{font-family:var(--f-display); font-size:2rem}
+.compare{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin-top:14px}
+@media (max-width:560px){.compare{grid-template-columns:minmax(0,1fr)}}
+.compare div{background:var(--card); border-radius:12px; padding:12px}
+.compare .k{font-size:.78rem; font-weight:800; text-transform:uppercase; letter-spacing:.06em; color:var(--soft)}
+.compare .now{font-size:.85rem; color:var(--soft)}
+.compare .new{font-family:var(--f-display); font-weight:800; font-size:1.5rem; color:var(--leaf)}
+
+.subs{display:grid; gap:12px}
+.sub-card{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:16px; display:grid; gap:8px}
+.sub-top{display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; align-items:baseline}
+.sub-card h3{font-size:1.25rem; margin:0}
+.use{font-size:.78rem; font-weight:800; text-transform:uppercase; letter-spacing:.06em; color:var(--leaf)}
+.how{margin:0; font-size:.95rem}
+.facts{display:flex; flex-wrap:wrap; gap:6px}
+.fact{font-size:.8rem; border-radius:999px; padding:3px 10px; background:var(--bg); border:1px solid var(--line)}
+.fact.good{background:var(--leaf-soft); border-color:transparent; color:var(--leaf); font-weight:700}
+.fact.meh{background:var(--yolk-soft); border-color:transparent}
+.buy{font-size:.85rem}
+.buy a{font-weight:700}
+
+.tbl{overflow-x:auto; margin-top:14px}
+table{border-collapse:collapse; width:100%; min-width:540px; font-size:.88rem; background:var(--card); border-radius:12px; overflow:hidden}
+th,td{padding:9px 10px; border-bottom:1px solid var(--line); text-align:left}
+th{font-size:.74rem; text-transform:uppercase; letter-spacing:.05em; color:var(--soft)}
+td.n{text-align:right}
+tr.base td{font-weight:700; background:var(--yolk-soft)}
+
+.plan{display:grid; gap:10px}
+.week{display:grid; grid-template-columns:5.5rem minmax(0,1fr); gap:12px; background:var(--card); border:1px solid var(--line); border-radius:14px; padding:12px 14px; align-items:start}
+.week b{font-family:var(--f-display); color:var(--leaf)}
+.week p{margin:0; font-size:.95rem}
+
+.notes{font-size:.88rem; color:var(--soft)}
+.notes li{margin-bottom:6px}
+footer{margin-top:36px; font-size:.85rem; color:var(--soft); border-top:1px solid var(--line); padding-top:14px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+<style>:root{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+
+
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow">Argentina · 2026</div>
+      <h1>Huevo por huevo</h1>
+      <p class="lede">Los argentinos somos quienes más huevos comemos en el mundo. Acá podés ver qué hay detrás de los tuyos y cómo cambiarlos de a poco, sin culpa y ahorrando plata.</p>
+    </div>
+    <div class="egg" aria-hidden="true"></div>
+  </header>
+
+  <!-- 1. Contar -->
+  <section class="step">
+    <h2><span class="step-n">1</span>¿Cuántos huevos comés por semana?</h2>
+    <p class="sub">Contá también los que van "escondidos" en otras comidas. No hace falta que sea exacto.</p>
+    <div class="card">
+      <div class="input-row">
+        <div class="big-num"><span id="nEggs">8</span><small>huevos por semana</small></div>
+        <div class="stepper"><button type="button" id="minus" aria-label="Un huevo menos">−</button><button type="button" id="plus" aria-label="Un huevo más">+</button></div>
+      </div>
+      <input type="range" id="eggs" min="0" max="35" value="8" aria-label="Huevos por semana">
+      <div class="quick">
+        <button class="pill" type="button" data-set="8">El promedio argentino (8)</button>
+        <button class="pill" type="button" data-set="4">Unos pocos (4)</button>
+        <button class="pill" type="button" data-set="14">Dos por día (14)</button>
+      </div>
+      <p class="hidden-eggs"><b>Huevos escondidos:</b> una milanesa casera lleva medio huevo, una porción de torta o budín más o menos uno, y un flan casero, uno por porción.</p>
+    </div>
+  </section>
+
+  <!-- 2. Mirar -->
+  <section class="step">
+    <h2><span class="step-n">2</span>Lo que hay detrás</h2>
+    <p class="sub">No para sentirte mal: para que sepas. La mayoría nunca lo pensó, y está perfecto empezar por acá.</p>
+    <div class="grid">
+      <div class="stat"><div class="v" id="sEggsYear">0</div><div class="l">huevos por año</div><p id="sEggsYearP"></p></div>
+      <div class="stat"><div class="v" id="sHens">0</div><div class="l">gallinas ponen tus huevos</div><p>Una gallina pone unos 302 huevos por año: casi uno por día, todo el año.</p><div class="hens" id="hens"></div></div>
+    </div>
+
+    <div class="card" style="margin-top:12px">
+      <h3 style="margin:0 0 4px; font-size:1.25rem">Cómo es la vida de esas gallinas</h3>
+      <div class="a4wrap">
+        <div class="a4" aria-label="Hoja A4">A4</div>
+        <p style="margin:0">En Argentina, la mayoría de las gallinas ponedoras vive en jaulas. Según la organización Sinergia Animal, cada una tiene <b>menos espacio que una hoja A4</b>: no puede abrir las alas, escarbar ni hacer un nido.</p>
+      </div>
+      <div class="life">
+        <div><b>~20</b><span>semanas de vida tiene una gallina cuando empieza a poner.</span></div>
+        <div><b>~80</b><span>semanas pone huevos casi todos los días, antes de que se la considere "agotada" y se la mande a faena.</span></div>
+        <div><b id="sChicks">0</b><span>pollitos machos por año corresponden a tu consumo. No ponen huevos ni sirven para carne, y en general la industria los descarta al nacer.</span></div>
+      </div>
+      <p class="soft-note">Todo esto pasa lejos de nuestra vista. Si te genera algo, es normal: a mucha gente le pasó lo mismo, y por eso existe este recorrido.</p>
+    </div>
+
+    <div class="grid" style="margin-top:12px">
+      <div class="stat"><div class="v" id="sCO2">0</div><div class="l">kg de CO₂ por año</div><p id="sCO2P"></p></div>
+      <div class="stat"><div class="v" id="sWater">0</div><div class="l">litros de agua dulce por año</div><p>Agua usada para producir el alimento de las gallinas y el resto de la producción.</p></div>
+    </div>
+
+    <h3 style="margin:28px 0 8px; font-size:1.35rem">¿Y la salud?</h3>
+    <p class="sub">Te decimos lo que muestra la evidencia, sin exagerar.</p>
+    <div class="health">
+      <div><h3>El huevo no es veneno</h3><p>En personas sanas, hasta un huevo por día no se asoció con más riesgo cardiovascular en un gran análisis de estudios (BMJ, 2020). Para personas con diabetes la evidencia es menos clara.</p></div>
+      <div><h3>Pero sus reemplazos suman cosas que el huevo no tiene</h3><p>El huevo no tiene fibra. La harina de garbanzo, las lentejas, la soja texturizada y el lino sí, y la mayoría de la gente come menos fibra de la recomendada (25 g por día, según la OMS).</p></div>
+      <div><h3>Un dato importante</h3><p>El huevo aporta algo de vitamina B12. Si dejás todos los productos animales, sumá un suplemento de B12: es simple, barato y necesario.</p></div>
+    </div>
+  </section>
+
+  <!-- 3. Cambiar -->
+  <section class="step">
+    <h2><span class="step-n">3</span>Cambiá a tu ritmo</h2>
+    <p class="sub">No hace falta dejar todo de golpe. Elegí cuántos huevos por semana te animás a reemplazar.</p>
+    <div class="swap-card">
+      <div class="swap-head"><span>Reemplazo <b id="nSwap">2</b> de <span id="nEggs2">8</span> huevos por semana</span></div>
+      <input type="range" id="swap" min="0" max="8" value="2" aria-label="Huevos por semana que reemplazás">
+      <div class="compare">
+        <div><div class="k">Gallinas</div><div class="now">Hoy: <span id="cHens0"></span></div><div class="new" id="cHens1"></div></div>
+        <div><div class="k">Plata por año</div><div class="now">En huevos hoy: <span id="cMoney0"></span></div><div class="new" id="cMoney1"></div></div>
+        <div><div class="k">Fibra extra</div><div class="now">Con harina de garbanzo</div><div class="new" id="cFib"></div></div>
+      </div>
+      <p class="hint" id="swapNote"></p>
+    </div>
+
+    <h3 style="margin:28px 0 10px; font-size:1.35rem">Qué usar en lugar del huevo</h3>
+    <div class="subs" id="subs"></div>
+
+    <div class="tbl">
+      <table>
+        <thead><tr><th>Para reemplazar 1 huevo</th><th class="n">Cuánto</th><th class="n">Proteína</th><th class="n">Fibra</th><th class="n">Costo aprox.</th></tr></thead>
+        <tbody id="tbl"></tbody>
+      </table>
+    </div>
+    <p class="hint">Precios relevados en tiendas online de Buenos Aires en octubre de 2026. Cambian seguido: tomalos como referencia. Valores nutricionales aproximados.</p>
+
+    <h3 style="margin:28px 0 10px; font-size:1.35rem">Un plan de cuatro semanas</h3>
+    <div class="plan">
+      <div class="week"><b>Semana 1</b><p>Tortas, budines y panqueques con "huevo de lino". Es el cambio más fácil: nadie nota la diferencia.</p></div>
+      <div class="week"><b>Semana 2</b><p>Milanesas y rebozados con harina de garbanzo y agua en vez de huevo batido.</p></div>
+      <div class="week"><b>Semana 3</b><p>Probá una tortilla de papas o un revuelto con harina de garbanzo. Con un poco de sal negra (kala namak), sabe a huevo.</p></div>
+      <div class="week"><b>Semana 4</b><p>Mirá qué quedó y elegí el próximo cambio. Cada huevo que cambiás cuenta.</p></div>
+    </div>
+  </section>
+
+  <section class="step notes" aria-labelledby="hFuentes">
+    <h2 id="hFuentes" style="font-size:1.4rem">Fuentes y cómo calculamos</h2>
+    <ul>
+      <li>Consumo de 398 huevos por persona al año (unos 8 por semana), 18.970 millones de huevos y 62,7 millones de gallinas en 2025: <a href="https://www.canal26.com/economia/2026/01/14/produccion-de-huevos-en-2025-crecio-casi-9-y-argentina-se-convirtio-en-el-principal-consumidor-por-habitante-del-mundo/" target="_blank" rel="noopener">Informe Productivo CAPIA</a>. De ahí sale el promedio de 302 huevos por gallina por año.</li>
+      <li>Jaulas y espacio menor a una hoja A4: <a href="https://bichosdecampo.com/?p=104469" target="_blank" rel="noopener">Sinergia Animal, vía Bichos de Campo</a>. Que la mayor parte de la producción es en jaulas: <a href="https://bichosdecampo.com/una-ong-afirma-que-la-produccion-de-huevos-de-gallinas-libres-de-jaula-es-segura-y-viable-y-llama-a-los-productores-avicolas-a-sumarse-a-esa-transicion/" target="_blank" rel="noopener">Bichos de Campo, 2025</a>.</li>
+      <li>Inicio de postura cerca de las 20 semanas y ciclo hasta las 100 semanas: <a href="https://lohmann-breeders.com/files/downloads/LEAFLETS/Cage/LSL-CLASSIC/2021_Lohmann-infographic_LSL-CLASSIC-CAGE_ESP.pdf" target="_blank" rel="noopener">guía de una de las principales genéticas de ponedoras (Lohmann)</a>. Los pollitos machos se estiman como uno por cada gallina que se reemplaza (unos 80 semanas de postura). Sobre el descarte de machos: <a href="https://agfundernews.com/orbem-begins-us-rollout-of-mri-based-in-ovo-sexing-tech" target="_blank" rel="noopener">AgFunder News</a>.</li>
+      <li>Ambiente por kilo de huevo (55 g por unidad): 4,67 kg de CO₂ equivalente y 578 litros de agua dulce, según <a href="https://ourworldindata.org/grapher/water-withdrawals-per-kg-poore" target="_blank" rel="noopener">Poore y Nemecek (2018), vía Our World in Data</a>.</li>
+      <li>Salud: <a href="https://medicalresearch.com/study-finds-no-link-between-moderate-egg-consumption-and-overall-cvd-risk/" target="_blank" rel="noopener">Drouin-Chartier y otros, BMJ 2020</a>. Fibra: <a href="https://www.redaccionmedica.com/ultimas-noticias/20230717/la-oms-recomienda-que-los-adultos-consuman-al-menos-gramos-de-verduras-frutas-dia/103917_0.amp.html" target="_blank" rel="noopener">recomendación de la OMS</a>.</li>
+      <li>Precio del huevo: maple de 30 a $6.990 (<a href="https://pricely.ar/product/7795282000482" target="_blank" rel="noopener">Pricely</a>). Los demás precios, en los links de cada producto.</li>
+      <li>Esto es información general, no consejo médico. Si tenés una condición de salud, consultá con un profesional de nutrición.</li>
+    </ul>
+  </section>
+
+  <footer>Una herramienta de <a href="https://www.activismo.org" target="_blank" rel="noopener">activismo.org</a>. ¿Querés ver toda tu alimentación? Probá <a href="https://arma-tu-semana.vercel.app" target="_blank" rel="noopener">Armá tu semana</a>.</footer>
+</div>
+
+<script>
+// Datos
+const PER_HEN = 302;            // huevos por gallina por año (CAPIA 2025)
+const LAY_WEEKS = 80;           // semanas de postura (Lohmann)
+const EGG_KG = 0.055;
+const CO2_KG = 4.67, WATER_KG = 578;   // por kg de huevo (Poore & Nemecek)
+const EGG_PRICE = 6990/30;      // $ por huevo
+const AVG_WEEK = 398/52;
+
+// Reemplazos por 1 huevo (valores aproximados)
+const SUBS = [
+  {n:"Harina de garbanzo", use:"Tortillas, revueltos, rebozados, omelettes", q:"3 cucharadas (30 g) + 3 de agua", prot:6.6, fib:3, price:2640, per:1000, g:30,
+   how:"Mezclá harina con agua hasta que quede como huevo batido. Para tortilla o revuelto, sumá cúrcuma y una pizca de sal negra.",
+   tags:[["good","Más barato"],["good","Igual proteína"],["good","Con fibra"]],
+   buy:[["El Portugués, 1 kg","https://www.elportugues.com.ar/productos/harina-de-garbanzo-x-1kg/"],["Positiva, 1 kg","https://www.positivamarket.com.ar/productos/harina-de-garbanzo-1kg/"],["Mercado Libre","https://listado.mercadolibre.com.ar/harina-de-garbanzo"]]},
+  {n:"Huevo de lino", use:"Tortas, budines, galletitas, panqueques", q:"1 cucharada de lino molido (7 g) + 3 de agua", prot:1.3, fib:1.9, price:5700, per:1000, g:7,
+   how:"Molé las semillas (o compralas molidas), mezclá con agua y esperá 5 minutos a que se ponga gelatinoso. Une la masa igual que el huevo.",
+   tags:[["good","Mucho más barato"],["good","Con omega 3"],["meh","Poca proteína: es para unir, no para alimentar"]],
+   buy:[["Dietética Tierra Madre, 1 kg","https://www.dieteticatierramadre.com.ar/productos/semillas-de-lino-por-kilo/"],["El Nuevo Emporio, 1 kg","https://tienda.elnuevoemporio.com.ar/tienda/otros-alimentos/semillas-de-lino-por-1-kilo-"],["Mercado Libre","https://listado.mercadolibre.com.ar/semillas-de-lino"]]},
+  {n:"Soja texturizada", use:"Proteína en guisos, rellenos, salsas y hamburguesas", q:"15 g secos (rinden unos 45 g hidratados)", prot:7.5, fib:2.6, price:3000, per:1000, g:15,
+   how:"Hidratala 10 minutos en agua caliente o caldo, escurrila y cocinala como carne picada. Ideal para rellenos de empanadas.",
+   tags:[["good","Más barato"],["good","Más proteína"],["good","Con fibra"]],
+   buy:[["Moragreen, 1 kg","https://www.moragreen.com.ar/productos/soja-texturizada-fina-1-kg/"],["Mercado Libre","https://listado.mercadolibre.com.ar/soja-texturizada-x-1-kilo"]]},
+  {n:"Tofu", use:"Revuelto de desayuno, \"huevo\" a la plancha", q:"50 g de tofu firme", prot:6, fib:0.5, price:8500, per:350, g:50,
+   how:"Desmenuzalo con un tenedor, saltealo con cúrcuma, sal negra y un chorrito de leche vegetal. Queda igual a un revuelto.",
+   tags:[["good","Igual proteína"],["meh","Más caro que el huevo"]],
+   buy:[["Soyana 350 g, The Food Market","https://www.thefoodmarket.com.ar/tofu-organico-soyana-x-350-g/p"],["Tofu artesanal 600 g, Tu Mercadito Vegano","https://tumercaditovegano.com.ar/producto/tofu-organico-artesanal-envasado-al-vacio/"]]},
+  {n:"Aquafaba", use:"Merengues, mousse, mayonesa casera", q:"3 cucharadas del líquido de garbanzos", prot:0, fib:0, price:0, per:1, g:0, free:true,
+   how:"Es el agua de los garbanzos en lata o de cocción. Batida, se pone como clara a nieve. Prácticamente gratis: la tirás igual.",
+   tags:[["good","Gratis"],["meh","Solo para claras: no aporta nutrientes"]],
+   buy:[]}
+];
+
+const $ = id => document.getElementById(id);
+const nf0 = new Intl.NumberFormat("es-AR",{maximumFractionDigits:0});
+const nf1 = new Intl.NumberFormat("es-AR",{maximumFractionDigits:1, minimumFractionDigits:1});
+const money = x => "$" + nf0.format(x);
+const costPerEgg = s => s.free ? 0 : s.price/s.per*s.g;
+
+let eggs = 8, swap = 2;
+
+// Tarjetas de reemplazo
+$("subs").innerHTML = SUBS.map(s=>`
+  <article class="sub-card">
+    <div class="sub-top"><h3>${s.n}</h3><span class="use">${s.use}</span></div>
+    <p class="how"><b>Por cada huevo:</b> ${s.q}. ${s.how}</p>
+    <div class="facts">${s.tags.map(([c,t])=>`<span class="fact ${c}">${t}</span>`).join("")}<span class="fact">${s.free?"Gratis":money(costPerEgg(s))+" por huevo"}</span></div>
+    ${s.buy.length?`<div class="buy">Dónde comprar: ${s.buy.map(([t,u])=>`<a href="${u}" target="_blank" rel="noopener">${t}</a>`).join(" · ")}</div>`:""}
+  </article>`).join("");
+
+$("tbl").innerHTML = `<tr class="base"><td>Huevo</td><td class="n">1 unidad (55 g)</td><td class="n">6,3 g</td><td class="n">0 g</td><td class="n">${money(EGG_PRICE)}</td></tr>` +
+  SUBS.map(s=>`<tr><td>${s.n}</td><td class="n">${s.free?"3 cdas":s.g+" g"}</td><td class="n">${nf1.format(s.prot)} g</td><td class="n">${nf1.format(s.fib)} g</td><td class="n">${s.free?"Gratis":money(costPerEgg(s))}</td></tr>`).join("");
+
+function hensHTML(x){
+  const full=Math.floor(x), frac=x-full; let h="";
+  for(let i=0;i<Math.min(full,40);i++) h+=`<span class="hen"></span>`;
+  if(full<40 && frac>0.03) h+=`<span class="hen part" style="--p:${Math.round(frac*100)}%"></span>`;
+  return h;
+}
+
+function update(){
+  $("nEggs").textContent = eggs; $("eggs").value = eggs; $("nEggs2").textContent = eggs;
+  $("swap").max = eggs; if(swap>eggs) swap=eggs; $("swap").value = swap; $("nSwap").textContent = swap;
+
+  const year = eggs*52, hens = year/PER_HEN, chicks = hens*52/LAY_WEEKS, kg = year*EGG_KG;
+  $("sEggsYear").textContent = nf0.format(year);
+  $("sEggsYearP").textContent = eggs===0 ? "Tu semana no tiene huevos." :
+    eggs<AVG_WEEK-0.5 ? "Comés menos que el promedio argentino." :
+    eggs>AVG_WEEK+0.5 ? "Comés más que el promedio argentino, que es de 398 por año." : "Estás en el promedio argentino: 398 por año.";
+  $("sHens").textContent = nf1.format(hens);
+  $("hens").innerHTML = hensHTML(hens);
+  $("sChicks").textContent = nf1.format(chicks);
+  $("sCO2").textContent = nf0.format(kg*CO2_KG);
+  $("sCO2P").textContent = `Por los ${nf1.format(kg)} kg de huevo que comés por año.`;
+  $("sWater").textContent = nf0.format(kg*WATER_KG);
+
+  // Cambio
+  const left = eggs - swap, hens1 = left*52/PER_HEN;
+  $("cHens0").textContent = nf1.format(hens);
+  $("cHens1").textContent = `${nf1.format(hens1)} gallinas`;
+  const money0 = year*EGG_PRICE;
+  const garb = SUBS[0], money1 = left*52*EGG_PRICE + swap*52*costPerEgg(garb);
+  $("cMoney0").textContent = money(money0);
+  $("cMoney1").textContent = swap ? `Ahorrás ${money(money0-money1)}` : money(money0);
+  $("cFib").textContent = `+${nf1.format(swap*garb.fib/7)} g por día`;
+  $("swapNote").textContent = swap===0 ? "Mové la barra para ver qué cambia." :
+    swap===eggs ? "Reemplazando todos, ninguna gallina pone huevos para vos. ¡Qué lindo cambio!" :
+    `Con este cambio, ${nf1.format(hens-hens1)} gallinas menos trabajan para tu mesa cada año. Calculado con harina de garbanzo.`;
+}
+
+$("eggs").addEventListener("input", e=>{ eggs=+e.target.value; update(); });
+$("swap").addEventListener("input", e=>{ swap=+e.target.value; update(); });
+$("plus").onclick = ()=>{ eggs=Math.min(35,eggs+1); update(); };
+$("minus").onclick = ()=>{ eggs=Math.max(0,eggs-1); update(); };
+document.querySelectorAll("[data-set]").forEach(b=>b.onclick=()=>{ eggs=+b.dataset.set; update(); });
+update();
+</script>
+
+</body>
+</html>
