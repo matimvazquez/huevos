@@ -181,6 +181,7 @@ footer{margin-top:36px; font-size:.85rem; color:var(--soft); border-top:1px soli
     <div class="grid" style="margin-top:12px">
       <div class="stat"><div class="v" id="sCO2">0</div><div class="l">kg de CO₂ por año</div><p id="sCO2P"></p></div>
       <div class="stat"><div class="v" id="sWater">0</div><div class="l">litros de agua dulce por año</div><p>Agua usada para producir el alimento de las gallinas y el resto de la producción.</p></div>
+      <div class="stat" style="grid-column:1/-1"><div class="v" id="sMoney">$0</div><div class="l">gastás en huevos por año</div><p id="sMoneyP"></p></div>
     </div>
 
     <h3 style="margin:28px 0 8px; font-size:1.35rem">¿Y la salud?</h3>
@@ -289,7 +290,7 @@ $("subs").innerHTML = SUBS.map(s=>`
   <article class="sub-card">
     <div class="sub-top"><h3>${s.n}</h3><span class="use">${s.use}</span></div>
     <p class="how"><b>Por cada huevo:</b> ${s.q}. ${s.how}</p>
-    <div class="facts">${s.tags.map(([c,t])=>`<span class="fact ${c}">${t}</span>`).join("")}<span class="fact">${s.free?"Gratis":money(costPerEgg(s))+" por huevo"}</span></div>
+    <div class="facts">${s.tags.map(([c,t])=>`<span class="fact ${c}">${t}</span>`).join("")}<span class="fact">${s.free?"Gratis":money(costPerEgg(s))+" por huevo"}</span><span class="fact">El huevo: ${money(EGG_PRICE)}</span></div>
     ${s.buy.length?`<div class="buy">Dónde comprar: ${s.buy.map(([t,u])=>`<a href="${u}" target="_blank" rel="noopener">${t}</a>`).join(" · ")}</div>`:""}
   </article>`).join("");
 
@@ -318,6 +319,8 @@ function update(){
   $("sCO2").textContent = nf0.format(kg*CO2_KG);
   $("sCO2P").textContent = `Por los ${nf1.format(kg)} kg de huevo que comés por año.`;
   $("sWater").textContent = nf0.format(kg*WATER_KG);
+  $("sMoney").textContent = money(year*EGG_PRICE);
+  $("sMoneyP").textContent = `A ${money(EGG_PRICE)} por huevo (maple de 30 a $6.990). Con harina de garbanzo, lo mismo te costaría ${money(year*costPerEgg(SUBS[0]))}.`;
 
   // Cambio
   const left = eggs - swap, hens1 = left*52/PER_HEN;
