@@ -200,10 +200,11 @@ footer{margin-top:36px; font-size:.85rem; color:var(--soft); border-top:1px soli
     <div class="swap-card">
       <div class="swap-head"><span>Reemplazo <b id="nSwap">2</b> de <span id="nEggs2">8</span> huevos por semana</span></div>
       <input type="range" id="swap" min="0" max="8" value="2" aria-label="Huevos por semana que reemplazás">
+      <div class="quick" id="pick" aria-label="Elegí con qué reemplazar"></div>
       <div class="compare">
         <div><div class="k">Gallinas</div><div class="now">Hoy: <span id="cHens0"></span></div><div class="new" id="cHens1"></div></div>
         <div><div class="k">Plata por año</div><div class="now">En huevos hoy: <span id="cMoney0"></span></div><div class="new" id="cMoney1"></div></div>
-        <div><div class="k">Fibra extra</div><div class="now">Con harina de garbanzo</div><div class="new" id="cFib"></div></div>
+        <div><div class="k">Fibra extra</div><div class="now" id="cFibNow"></div><div class="new" id="cFib"></div></div>
       </div>
       <p class="hint" id="swapNote"></p>
     </div>
@@ -255,6 +256,14 @@ const AVG_WEEK = 398/52;
 
 // Reemplazos por 1 huevo (valores aproximados)
 const SUBS = [
+  {n:"Lentejas", use:"Guisos, hamburguesas, ensaladas y rellenos", q:"26 g secas (unos 60 g cocidas)", prot:6.3, fib:2.8, price:4070, per:1000, g:26,
+   how:"Igualan la proteína de un huevo y suman fibra y hierro. Un guiso de lentejas o unas hamburguesas caseras reemplazan varios huevos de la semana.",
+   tags:[["good","Más barato"],["good","Igual proteína"],["good","Con fibra y hierro"]],
+   buy:[["El Portugués, 1 kg","https://www.elportugues.com.ar/productos/lentejas-x-1kg-el-portugues/"],["Mercado Libre","https://listado.mercadolibre.com.ar/lentejas-por-kilo"]]},
+  {n:"Quinoa", use:"Ensaladas, bowls, guarniciones, hamburguesas", q:"45 g secos (unos 130 g cocidos)", prot:6.3, fib:3.2, price:6290, per:1000, g:45,
+   how:"Lavala bien y cocinala 15 minutos. Tiene proteína completa, como el huevo, y además fibra.",
+   tags:[["good","Proteína completa"],["good","Con fibra"],["meh","Algo más cara que el huevo"]],
+   buy:[["Positiva, 1 kg","https://www.positivamarket.com.ar/productos/quinoa-nacional-1kg/"],["Mercado Libre","https://listado.mercadolibre.com.ar/quinoa-x-kilo"]]},
   {n:"Harina de garbanzo", use:"Tortillas, revueltos, rebozados, omelettes", q:"3 cucharadas (30 g) + 3 de agua", prot:6.6, fib:3, price:2640, per:1000, g:30,
    how:"Mezclá harina con agua hasta que quede como huevo batido. Para tortilla o revuelto, sumá cúrcuma y una pizca de sal negra.",
    tags:[["good","Más barato"],["good","Igual proteína"],["good","Con fibra"]],
@@ -283,7 +292,10 @@ const nf1 = new Intl.NumberFormat("es-AR",{maximumFractionDigits:1, minimumFract
 const money = x => "$" + nf0.format(x);
 const costPerEgg = s => s.free ? 0 : s.price/s.per*s.g;
 
-let eggs = 8, swap = 2;
+let eggs = 8, swap = 2, pick = 0;
+const PICKABLE = SUBS.map((s,i)=>i).filter(i=>SUBS[i].prot>=6);
+function renderPick(){ $("pick").innerHTML = '<span class="hint" style="margin:0 4px 0 0">Reemplazar con:</span>' + PICKABLE.map(i=>`<button type="button" class="pill" data-pick="${i}" aria-pressed="${i===pick}" style="${i===pick?'background:var(--leaf);color:var(--bg);border-color:var(--leaf)':''}">${SUBS[i].n}</button>`).join(""); }
+document.addEventListener("click", e=>{ const b=e.target.closest("[data-pick]"); if(b){ pick=+b.dataset.pick; update(); } });
 
 // Tarjetas de reemplazo
 $("subs").innerHTML = SUBS.map(s=>`
@@ -320,20 +332,22 @@ function update(){
   $("sCO2P").textContent = `Por los ${nf1.format(kg)} kg de huevo que comés por año.`;
   $("sWater").textContent = nf0.format(kg*WATER_KG);
   $("sMoney").textContent = money(year*EGG_PRICE);
-  $("sMoneyP").textContent = `A ${money(EGG_PRICE)} por huevo (maple de 30 a $6.990). Con harina de garbanzo, lo mismo te costaría ${money(year*costPerEgg(SUBS[0]))}.`;
+  $("sMoneyP").textContent = `A ${money(EGG_PRICE)} por huevo (maple de 30 a $6.990). Con lentejas, la misma proteína te costaría ${money(year*costPerEgg(SUBS[0]))}.`;
 
   // Cambio
   const left = eggs - swap, hens1 = left*52/PER_HEN;
   $("cHens0").textContent = nf1.format(hens);
   $("cHens1").textContent = `${nf1.format(hens1)} gallinas`;
   const money0 = year*EGG_PRICE;
-  const garb = SUBS[0], money1 = left*52*EGG_PRICE + swap*52*costPerEgg(garb);
+  renderPick();
+  const garb = SUBS[pick], money1 = left*52*EGG_PRICE + swap*52*costPerEgg(garb);
   $("cMoney0").textContent = money(money0);
-  $("cMoney1").textContent = swap ? `Ahorrás ${money(money0-money1)}` : money(money0);
+  $("cMoney1").textContent = !swap ? money(money0) : money1<=money0 ? `Ahorrás ${money(money0-money1)}` : `Gastás ${money(money1-money0)} más`;
+  $("cFibNow").textContent = `Con ${garb.n.toLowerCase()}`;
   $("cFib").textContent = `+${nf1.format(swap*garb.fib/7)} g por día`;
   $("swapNote").textContent = swap===0 ? "Mové la barra para ver qué cambia." :
     swap===eggs ? "Reemplazando todos, ninguna gallina pone huevos para vos. ¡Qué lindo cambio!" :
-    `Con este cambio, ${nf1.format(hens-hens1)} gallinas menos trabajan para tu mesa cada año. Calculado con harina de garbanzo.`;
+    `Con este cambio, ${nf1.format(hens-hens1)} gallinas menos trabajan para tu mesa cada año. Calculado con ${garb.n.toLowerCase()}.`;
 }
 
 $("eggs").addEventListener("input", e=>{ eggs=+e.target.value; update(); });
