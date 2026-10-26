@@ -12,16 +12,16 @@
 /* Layout: una sola columna amable, pasos numerados (es un recorrido real: contar, mirar, cambiar). Acento yema, verde de cambio. */
 :root{
   --bg:#F3F6F4; --card:#FFFFFF; --ink:#1E2A26; --soft:#5E6D67; --line:#D6DFDA;
-  --yolk:#F2B21B; --yolk-soft:#FDF1CF; --leaf:#2E8A5C; --leaf-soft:#DDF1E5; --rose:#C9634C;
+  --yolk:#F2B21B; --yolk-soft:#FDF1CF; --leaf:#2E8A5C; --leaf-soft:#DDF1E5; --rose:#C9634C; --bad:#C2372D; --bad-soft:#FBE3DF;
   --f-display:"Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
   --f-body:"Nunito Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#121815; --card:#1A221E; --ink:#E8EFEB; --soft:#9FB0A8; --line:#2C3832;
-  --yolk:#F7C548; --yolk-soft:#3A3115; --leaf:#62C894; --leaf-soft:#173024; --rose:#EE8E78; color-scheme:dark}}
+  --yolk:#F7C548; --yolk-soft:#3A3115; --leaf:#62C894; --leaf-soft:#173024; --rose:#EE8E78; --bad:#FF7A6B; --bad-soft:#3B1C1A; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#121815; --card:#1A221E; --ink:#E8EFEB; --soft:#9FB0A8; --line:#2C3832;
-  --yolk:#F7C548; --yolk-soft:#3A3115; --leaf:#62C894; --leaf-soft:#173024; --rose:#EE8E78; color-scheme:dark}
+  --yolk:#F7C548; --yolk-soft:#3A3115; --leaf:#62C894; --leaf-soft:#173024; --rose:#EE8E78; --bad:#FF7A6B; --bad-soft:#3B1C1A; color-scheme:dark}
 
 *{box-sizing:border-box}
 body{background:var(--bg); color:var(--ink); font-family:var(--f-body); font-size:17px; line-height:1.6; font-variant-numeric:tabular-nums}
@@ -62,6 +62,14 @@ input[type=range]{width:100%; margin:16px 0 4px; accent-color:var(--yolk); heigh
 @media (max-width:560px){.grid{grid-template-columns:minmax(0,1fr)}}
 .stat{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:16px}
 .stat .v{font-family:var(--f-display); font-weight:800; font-size:2.2rem; line-height:1}
+.stat.bad{border-left:5px solid var(--bad)} .stat.bad .v{color:var(--bad)}
+.health .bad{border-left:5px solid var(--bad)} .health .bad h3{color:var(--bad)}
+.health .good{border-left:5px solid var(--leaf); background:var(--leaf-soft)} .health .good h3{color:var(--leaf)}
+.health .info{border-left:5px solid var(--line)}
+.legend{display:flex; flex-wrap:wrap; gap:8px 16px; font-size:.85rem; margin:0 0 14px}
+.legend span{display:inline-flex; align-items:center; gap:6px}
+.legend i{width:12px; height:12px; border-radius:3px; display:inline-block}
+.compare .new{color:var(--leaf)}
 .stat .l{font-weight:700; margin-top:4px}
 .stat p{margin:6px 0 0; font-size:.88rem; color:var(--soft)}
 .hens{display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; min-height:20px}
@@ -100,7 +108,7 @@ input[type=range]{width:100%; margin:16px 0 4px; accent-color:var(--yolk); heigh
 .facts{display:flex; flex-wrap:wrap; gap:6px}
 .fact{font-size:.8rem; border-radius:999px; padding:3px 10px; background:var(--bg); border:1px solid var(--line)}
 .fact.good{background:var(--leaf-soft); border-color:transparent; color:var(--leaf); font-weight:700}
-.fact.meh{background:var(--yolk-soft); border-color:transparent}
+.fact.meh{background:var(--bad-soft); border-color:transparent; color:var(--bad)}
 .buy{font-size:.85rem}
 .buy a{font-weight:700}
 
@@ -109,7 +117,7 @@ table{border-collapse:collapse; width:100%; min-width:540px; font-size:.88rem; b
 th,td{padding:9px 10px; border-bottom:1px solid var(--line); text-align:left}
 th{font-size:.74rem; text-transform:uppercase; letter-spacing:.05em; color:var(--soft)}
 td.n{text-align:right}
-tr.base td{font-weight:700; background:var(--yolk-soft)}
+tr.base td{font-weight:700; background:var(--bad-soft); color:var(--bad)}
 
 .plan{display:grid; gap:10px}
 .week{display:grid; grid-template-columns:5.5rem minmax(0,1fr); gap:12px; background:var(--card); border:1px solid var(--line); border-radius:14px; padding:12px 14px; align-items:start}
@@ -160,8 +168,8 @@ footer{margin-top:36px; font-size:.85rem; color:var(--soft); border-top:1px soli
     <h2><span class="step-n">2</span>Tu consumo en un año</h2>
     <p class="sub">Gallinas, plata, agua y emisiones que suman tus huevos en un año.</p>
     <div class="grid">
-      <div class="stat"><div class="v" id="sEggsYear">0</div><div class="l">huevos por año</div><p id="sEggsYearP"></p></div>
-      <div class="stat"><div class="v" id="sHens">0</div><div class="l">gallinas ponen tus huevos</div><p>Una gallina pone unos 302 huevos por año: casi uno por día, todo el año.</p><div class="hens" id="hens"></div></div>
+      <div class="stat bad"><div class="v" id="sEggsYear">0</div><div class="l">huevos por año</div><p id="sEggsYearP"></p></div>
+      <div class="stat bad"><div class="v" id="sHens">0</div><div class="l">gallinas ponen tus huevos</div><p>Una gallina pone unos 302 huevos por año: casi uno por día, todo el año.</p><div class="hens" id="hens"></div></div>
     </div>
 
     <div class="card" style="margin-top:12px">
@@ -179,19 +187,20 @@ footer{margin-top:36px; font-size:.85rem; color:var(--soft); border-top:1px soli
     </div>
 
     <div class="grid" style="margin-top:12px">
-      <div class="stat"><div class="v" id="sCO2">0</div><div class="l">kg de CO₂ por año</div><p id="sCO2P"></p></div>
-      <div class="stat"><div class="v" id="sWater">0</div><div class="l">litros de agua dulce por año</div><p>Agua usada para producir el alimento de las gallinas y el resto de la producción.</p></div>
-      <div class="stat" style="grid-column:1/-1"><div class="v" id="sMoney">$0</div><div class="l">gastás en huevos por año</div><p id="sMoneyP"></p></div>
+      <div class="stat bad"><div class="v" id="sCO2">0</div><div class="l">kg de CO₂ por año</div><p id="sCO2P"></p></div>
+      <div class="stat bad"><div class="v" id="sWater">0</div><div class="l">litros de agua dulce por año</div><p>Agua usada para producir el alimento de las gallinas y el resto de la producción.</p></div>
+      <div class="stat bad" style="grid-column:1/-1"><div class="v" id="sMoney">$0</div><div class="l">gastás en huevos por año</div><p id="sMoneyP"></p></div>
     </div>
 
     <h3 style="margin:28px 0 8px; font-size:1.35rem">¿Y la salud?</h3>
     <p class="sub">Te decimos lo que muestra la evidencia, sin exagerar.</p>
+    <div class="legend"><span><i style="background:var(--bad)"></i>Lo problemático del huevo</span><span><i style="background:var(--leaf)"></i>Lo que ganás con otras proteínas</span></div>
     <div class="health">
-      <div><h3>La evidencia está dividida</h3><p>Un gran análisis de estudios (BMJ, 2020) no encontró más riesgo cardiovascular con hasta un huevo por día en personas sanas. Pero otro estudio con 30.000 personas seguidas 17 años (JAMA, 2019) encontró que cada medio huevo diario extra se asociaba con un 17% más de riesgo cardiovascular y un 18% más de mortalidad, sobre todo por el colesterol de la yema. Son estudios observacionales: muestran asociaciones, no prueban causa.</p></div>
-      <div><h3>Diabetes: más riesgo en algunos países</h3><p>En tres grandes estudios de EE. UU., cada huevo diario se asoció con un 14% más de riesgo de diabetes tipo 2. Al sumar estudios de Europa y Asia la asociación desaparece, y los autores creen que pesa con qué se come el huevo (Am J Clin Nutr, 2020). Para quienes ya tienen diabetes, la evidencia es menos clara.</p></div>
-      <div><h3>¿"Comer huevo es como fumar"?</h3><p>Viene de un estudio canadiense de 2012 con 1.231 pacientes: quienes comían más yemas tenían más placa en las arterias, cerca de dos tercios del efecto de fumar. Es un estudio débil: el consumo fue autoinformado, no midió ejercicio ni el resto de la dieta, y midió la placa una sola vez. Sirve como alerta, no como prueba. No lo usamos como argumento.</p></div>
-      <div><h3>Pero sus reemplazos suman cosas que el huevo no tiene</h3><p>El huevo no tiene fibra. La harina de garbanzo, las lentejas y la soja texturizada sí, y la mayoría de la gente come menos fibra de la recomendada (25 g por día, según la OMS).</p></div>
-      <div><h3>Un dato importante</h3><p>El huevo aporta algo de vitamina B12. Si dejás todos los productos animales, sumá un suplemento de B12: es simple, barato y necesario.</p></div>
+      <div class="bad"><h3>Corazón: la evidencia está dividida</h3><p>Un gran análisis de estudios (BMJ, 2020) no encontró más riesgo cardiovascular con hasta un huevo por día en personas sanas. Pero otro estudio con 30.000 personas seguidas 17 años (JAMA, 2019) encontró que cada medio huevo diario extra se asociaba con un 17% más de riesgo cardiovascular y un 18% más de mortalidad, sobre todo por el colesterol de la yema. Son estudios observacionales: muestran asociaciones, no prueban causa.</p></div>
+      <div class="bad"><h3>Diabetes: más riesgo en algunos países</h3><p>En tres grandes estudios de EE. UU., cada huevo diario se asoció con un 14% más de riesgo de diabetes tipo 2. Al sumar estudios de Europa y Asia la asociación desaparece, y los autores creen que pesa con qué se come el huevo (Am J Clin Nutr, 2020). Para quienes ya tienen diabetes, la evidencia es menos clara.</p></div>
+      <div class="info"><h3>¿"Comer huevo es como fumar"?</h3><p>Viene de un estudio canadiense de 2012 con 1.231 pacientes: quienes comían más yemas tenían más placa en las arterias, cerca de dos tercios del efecto de fumar. Es un estudio débil: el consumo fue autoinformado, no midió ejercicio ni el resto de la dieta, y midió la placa una sola vez. Sirve como alerta, no como prueba. No lo usamos como argumento.</p></div>
+      <div class="good"><h3>Los reemplazos suman fibra, que el huevo no tiene</h3><p>El huevo no tiene fibra. La harina de garbanzo, las lentejas y la soja texturizada sí, y la mayoría de la gente come menos fibra de la recomendada (25 g por día, según la OMS).</p></div>
+      <div class="info"><h3>Un dato importante</h3><p>El huevo aporta algo de vitamina B12. Si dejás todos los productos animales, sumá un suplemento de B12: es simple, barato y necesario.</p></div>
     </div>
   </section>
 
@@ -304,7 +313,7 @@ $("subs").innerHTML = SUBS.map(s=>`
   <article class="sub-card">
     <div class="sub-top"><h3>${s.n}</h3><span class="use">${s.use}</span></div>
     <p class="how"><b>Por cada huevo:</b> ${s.q}. ${s.how}</p>
-    <div class="facts">${s.tags.map(([c,t])=>`<span class="fact ${c}">${t}</span>`).join("")}<span class="fact">${s.free?"Gratis":s.noprice?"Precio de verdulería":money(costPerEgg(s))+" por huevo"}</span><span class="fact">El huevo: ${money(EGG_PRICE)}</span></div>
+    <div class="facts">${s.tags.map(([c,t])=>`<span class="fact ${c}">${t}</span>`).join("")}<span class="fact">${s.free?"Gratis":s.noprice?"Precio de verdulería":money(costPerEgg(s))+" por huevo"}</span><span class="fact meh">El huevo: ${money(EGG_PRICE)}</span></div>
     ${s.buy.length?`<div class="buy">Dónde comprar: ${s.buy.map(([t,u])=>`<a href="${u}" target="_blank" rel="noopener">${t}</a>`).join(" · ")}</div>`:""}
   </article>`).join("");
 
