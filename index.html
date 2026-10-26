@@ -25,7 +25,7 @@
 
 *{box-sizing:border-box}
 body{background:var(--bg); color:var(--ink); font-family:var(--f-body); font-size:17px; line-height:1.6; font-variant-numeric:tabular-nums}
-.wrap{max-width:820px; margin:0 auto; padding-left:max(16px,env(safe-area-inset-left,0px)); padding-right:max(16px,env(safe-area-inset-right,0px)); padding-block:28px 72px}
+.wrap{max-width:1180px; margin:0 auto; padding-left:max(16px,env(safe-area-inset-left,0px)); padding-right:max(16px,env(safe-area-inset-right,0px)); padding-block:28px 72px}
 a{color:inherit}
 button{font:inherit; color:inherit}
 :focus-visible{outline:3px solid var(--yolk); outline-offset:2px; border-radius:6px}
@@ -41,7 +41,7 @@ h1{font-size:clamp(2.6rem,9vw,4.6rem); font-weight:800; margin:.1em 0 .15em; let
 .step{margin-top:44px}
 .step-n{display:inline-grid; place-items:center; width:30px; height:30px; border-radius:50%; background:var(--ink); color:var(--bg); font-weight:800; font-size:.9rem; margin-right:10px; vertical-align:2px}
 h2{font-size:clamp(1.6rem,4.5vw,2.2rem); font-weight:800; margin:0 0 6px}
-.sub{color:var(--soft); margin:0 0 16px; max-width:60ch}
+.sub{color:var(--soft); margin:0 0 16px; max-width:70ch}
 
 .card{background:var(--card); border:1px solid var(--line); border-radius:18px; padding:20px}
 .input-row{display:flex; align-items:center; gap:14px; flex-wrap:wrap}
@@ -58,7 +58,7 @@ input[type=range]{width:100%; margin:16px 0 4px; accent-color:var(--yolk); heigh
 .hidden-eggs{margin-top:14px; font-size:.9rem; background:var(--yolk-soft); border-radius:12px; padding:10px 12px}
 
 /* Resultados */
-.grid{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px}
+.grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr)); gap:12px}
 @media (max-width:560px){.grid{grid-template-columns:minmax(0,1fr)}}
 .stat{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:16px}
 .stat .v{font-family:var(--f-display); font-weight:800; font-size:2.2rem; line-height:1}
@@ -76,6 +76,11 @@ input[type=range]{width:100%; margin:16px 0 4px; accent-color:var(--yolk); heigh
 .hen{width:18px; height:18px; border-radius:50% 50% 45% 45%; background:var(--yolk); position:relative}
 .hen.part{background:linear-gradient(90deg,var(--yolk) var(--p),var(--line) var(--p))}
 
+@media (min-width:900px){
+  .lifecard{display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,1fr); gap:8px 28px; align-items:start}
+  .lifecard > h3{grid-column:1/-1}
+  .lifecard .photo{grid-row:2 / span 3; margin-top:4px}
+}
 .photo{margin:12px 0 4px} .photo img{display:block; width:100%; height:auto; border-radius:14px} .photo figcaption{font-size:.78rem; color:var(--soft); margin-top:6px}
 .a4wrap{display:grid; grid-template-columns:auto minmax(0,1fr); gap:18px; align-items:center; margin-top:12px}
 .a4{width:84px; aspect-ratio:210/297; border:2px dashed var(--soft); border-radius:3px; display:grid; place-items:center; font-weight:800; font-size:.8rem; color:var(--soft); max-width:100%}
@@ -84,7 +89,7 @@ input[type=range]{width:100%; margin:16px 0 4px; accent-color:var(--yolk); heigh
 .life b{font-family:var(--f-display); font-size:1.3rem; color:var(--yolk); line-height:1.2}
 .soft-note{font-size:.92rem; color:var(--soft); border-left:3px solid var(--leaf); padding-left:12px; margin:16px 0 0}
 
-.health{display:grid; gap:10px}
+.health{display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr))}
 .health div{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px 16px}
 .health h3{font-size:1.1rem; margin:0 0 4px}
 .health p{margin:0; font-size:.93rem; color:var(--soft)}
@@ -100,7 +105,7 @@ input[type=range]{width:100%; margin:16px 0 4px; accent-color:var(--yolk); heigh
 .compare .now{font-size:.85rem; color:var(--soft)}
 .compare .new{font-family:var(--f-display); font-weight:800; font-size:1.5rem; color:var(--leaf)}
 
-.subs{display:grid; gap:12px}
+.subs{display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr))}
 .sub-card{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:16px; display:grid; gap:8px}
 .sub-top{display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; align-items:baseline}
 .sub-card h3{font-size:1.25rem; margin:0}
@@ -120,7 +125,7 @@ th{font-size:.74rem; text-transform:uppercase; letter-spacing:.05em; color:var(-
 td.n{text-align:right}
 tr.base td{font-weight:700; background:var(--bad-soft); color:var(--bad)}
 
-.plan{display:grid; gap:10px}
+.plan{display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr))}
 .week{display:grid; grid-template-columns:5.5rem minmax(0,1fr); gap:12px; background:var(--card); border:1px solid var(--line); border-radius:14px; padding:12px 14px; align-items:start}
 .week b{font-family:var(--f-display); color:var(--leaf)}
 .week p{margin:0; font-size:.95rem}
@@ -173,7 +178,7 @@ footer{margin-top:36px; font-size:.85rem; color:var(--soft); border-top:1px soli
       <div class="stat bad"><div class="v" id="sHens">0</div><div class="l">gallinas ponen tus huevos</div><p>Una gallina pone unos 302 huevos por año: casi uno por día, todo el año.</p><div class="hens" id="hens"></div></div>
     </div>
 
-    <div class="card" style="margin-top:12px">
+    <div class="card lifecard" style="margin-top:12px">
       <h3 style="margin:0 0 4px; font-size:1.25rem">Cómo es la vida de esas gallinas</h3>
       <figure class="photo"><img src="img/gallina-jaula.jpg" alt="Gallina blanca asomando la cabeza entre los barrotes de una jaula de batería, con otras gallinas enjauladas detrás" width="1200" height="630" loading="lazy"><figcaption>Gallinas ponedoras en jaulas de batería. Foto: Igualdad Animal.</figcaption></figure>
       <div class="a4wrap">
@@ -191,7 +196,7 @@ footer{margin-top:36px; font-size:.85rem; color:var(--soft); border-top:1px soli
     <div class="grid" style="margin-top:12px">
       <div class="stat bad"><div class="v" id="sCO2">0</div><div class="l">kg de CO₂ por año</div><p id="sCO2P"></p></div>
       <div class="stat bad"><div class="v" id="sWater">0</div><div class="l">litros de agua dulce por año</div><p>Agua usada para producir el alimento de las gallinas y el resto de la producción.</p></div>
-      <div class="stat bad" style="grid-column:1/-1"><div class="v" id="sMoney">$0</div><div class="l">gastás en huevos por año</div><p id="sMoneyP"></p></div>
+      <div class="stat bad"><div class="v" id="sMoney">$0</div><div class="l">gastás en huevos por año</div><p id="sMoneyP"></p></div>
     </div>
 
     <h3 style="margin:28px 0 8px; font-size:1.35rem">¿Y la salud?</h3>
